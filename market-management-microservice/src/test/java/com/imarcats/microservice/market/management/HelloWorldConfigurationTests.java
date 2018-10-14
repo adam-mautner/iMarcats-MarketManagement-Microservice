@@ -15,7 +15,7 @@
  */
 package com.imarcats.microservice.market.management;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,11 +39,15 @@ public class HelloWorldConfigurationTests {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
+    
     @Test
     public void testGreeting() throws Exception {
         ResponseEntity<String> entity = restTemplate
                 .getForEntity("http://localhost:" + this.port + "/", String.class);
+        assertEquals(HttpStatus.OK, entity.getStatusCode());
+        
+        entity = restTemplate
+                .getForEntity("http://localhost:" + this.port + "/assetClasses", String.class);
         assertEquals(HttpStatus.OK, entity.getStatusCode());
     }
 

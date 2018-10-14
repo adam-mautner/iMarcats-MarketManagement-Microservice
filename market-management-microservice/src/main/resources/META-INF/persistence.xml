@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://xmlns.jcp.org/xml/ns/persistence
+        http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="iMarcats">
+
+		<class>com.imarcats.model.ActivatableMarketObject</class>
+		<class>com.imarcats.model.ActivationAudit</class>
+		<class>com.imarcats.model.ApprovalAudit</class>
+		<class>com.imarcats.model.AssetClass</class>
+		<class>com.imarcats.model.AuditTrailEntry</class>
+		<class>com.imarcats.model.BookEntryBase</class>
+		<class>com.imarcats.model.BuyBook</class>
+		<class>com.imarcats.model.BuyOrderBookEntry</class>
+		<class>com.imarcats.model.ChangeAudit</class>
+		<class>com.imarcats.model.CircuitBreaker</class>
+		<class>com.imarcats.model.CreationAudit</class>
+		<class>com.imarcats.model.DeactivationAudit</class>
+		<class>com.imarcats.model.DeletionAudit</class>
+		<class>com.imarcats.model.HaltRule</class>
+		<class>com.imarcats.model.Instrument</class>
+		<class>com.imarcats.model.Market</class>
+		<class>com.imarcats.model.MarketModelObject</class>
+		<class>com.imarcats.model.MarketOperator</class>
+		<class>com.imarcats.model.MarketPropertyNames</class>
+		<class>com.imarcats.model.MatchedTrade</class>
+		<class>com.imarcats.model.Order</class>
+		<class>com.imarcats.model.OrderBookEntryFactory</class>
+		<class>com.imarcats.model.OrderBookEntryModel</class>
+		<class>com.imarcats.model.OrderBookFactory</class>
+		<class>com.imarcats.model.OrderBookModel</class>
+		<class>com.imarcats.model.OrderPropertyNames</class>
+		<class>com.imarcats.model.Product</class>
+		<class>com.imarcats.model.Rollable</class>
+		<class>com.imarcats.model.RolloverAudit</class>
+		<class>com.imarcats.model.SellBook</class>
+		<class>com.imarcats.model.SellOrderBookEntry</class>
+		<class>com.imarcats.model.SuspensionAudit</class>
+		<class>com.imarcats.model.TradeSide</class>
+		<class>com.imarcats.model.Underlying</class>
+		<class>com.imarcats.model.VersionedMarketObject</class>
+
+		<class>com.imarcats.model.types.ActivationStatus</class>
+		<class>com.imarcats.model.types.Address</class>
+		<class>com.imarcats.model.types.Ask</class>
+		<class>com.imarcats.model.types.AuditEntryAction</class>
+		<class>com.imarcats.model.types.AuditInformation</class>
+		<class>com.imarcats.model.types.Bid</class>
+		<class>com.imarcats.model.types.BooleanProperty</class>
+		<class>com.imarcats.model.types.BusinessCalendar</class>
+		<class>com.imarcats.model.types.BusinessCalendarDay</class>
+		<class>com.imarcats.model.types.ChangeType</class>
+		<class>com.imarcats.model.types.ClosingQuote</class>
+		<class>com.imarcats.model.types.CorporateInformation</class>
+		<class>com.imarcats.model.types.DatastoreKey</class>
+		<class>com.imarcats.model.types.DatePeriod</class>
+		<class>com.imarcats.model.types.DateProperty</class>
+		<class>com.imarcats.model.types.DateRangeProperty</class>
+		<class>com.imarcats.model.types.Day</class>
+		<class>com.imarcats.model.types.DeliveryPeriod</class>
+		<class>com.imarcats.model.types.DoubleProperty</class>
+		<class>com.imarcats.model.types.EndTime</class>
+		<class>com.imarcats.model.types.ExecutionSystem</class>
+		<class>com.imarcats.model.types.ExpirationProperties</class>
+		<class>com.imarcats.model.types.InstrumentType</class>
+		<class>com.imarcats.model.types.IntProperty</class>
+		<class>com.imarcats.model.types.LastTrade</class>
+		<class>com.imarcats.model.types.LimitQuote</class>
+		<class>com.imarcats.model.types.MarketState</class>
+		<class>com.imarcats.model.types.MembershipType</class>
+		<class>com.imarcats.model.types.ObjectProperty</class>
+		<class>com.imarcats.model.types.OpeningQuote</class>
+		<class>com.imarcats.model.types.OrderExpirationInstruction</class>
+		<class>com.imarcats.model.types.OrderProperties</class>
+		<class>com.imarcats.model.types.OrderQuote</class>
+		<class>com.imarcats.model.types.OrderRejectAction</class>
+		<class>com.imarcats.model.types.OrderSide</class>
+		<class>com.imarcats.model.types.OrderState</class>
+		<class>com.imarcats.model.types.OrderTriggerInstruction</class>
+		<class>com.imarcats.model.types.OrderType</class>
+		<class>com.imarcats.model.types.PagedAssetClassList</class>
+		<class>com.imarcats.model.types.PagedAuditTrailEntryList</class>
+		<class>com.imarcats.model.types.PagedInstrumentList</class>
+		<class>com.imarcats.model.types.PagedMarketList</class>
+		<class>com.imarcats.model.types.PagedMarketOperatorList</class>
+		<class>com.imarcats.model.types.PagedMatchedTradeSideList</class>
+		<class>com.imarcats.model.types.PagedOrderList</class>
+		<class>com.imarcats.model.types.PagedProductList</class>
+		<class>com.imarcats.model.types.Position</class>
+		<class>com.imarcats.model.types.PreviousClosingQuote</class>
+		<class>com.imarcats.model.types.PreviousLastTrade</class>
+		<class>com.imarcats.model.types.PreviousOpeningQuote</class>
+		<class>com.imarcats.model.types.ProductType</class>
+		<class>com.imarcats.model.types.Property</class>
+		<class>com.imarcats.model.types.PropertyHolder</class>
+		<class>com.imarcats.model.types.PropertyType</class>
+		<class>com.imarcats.model.types.Quote</class>
+		<class>com.imarcats.model.types.QuoteAndSize</class>
+		<class>com.imarcats.model.types.QuoteType</class>
+		<class>com.imarcats.model.types.RecurringActionDetail</class>
+		<class>com.imarcats.model.types.SecondaryOrderPrecedenceRuleType</class>
+		<class>com.imarcats.model.types.SettlementPrice</class>
+		<class>com.imarcats.model.types.SettlementType</class>
+		<class>com.imarcats.model.types.StartTime</class>
+		<class>com.imarcats.model.types.StopQuote</class>
+		<class>com.imarcats.model.types.StringListProperty</class>
+		<class>com.imarcats.model.types.StringProperty</class>
+		<class>com.imarcats.model.types.TimeOfDay</class>
+		<class>com.imarcats.model.types.TimePeriod</class>
+		<class>com.imarcats.model.types.TimeProperty</class>
+		<class>com.imarcats.model.types.TimeRangeProperty</class>
+		<class>com.imarcats.model.types.TradeProperties</class>
+		<class>com.imarcats.model.types.TradeQuote</class>
+		<class>com.imarcats.model.types.TradeSettlementState</class>
+		<class>com.imarcats.model.types.TradingSession</class>
+		<class>com.imarcats.model.types.TransferableObject</class>
+		<class>com.imarcats.model.types.TriggerProperties</class>
+		<class>com.imarcats.model.types.UnderlyingType</class>
+		<class>com.imarcats.model.types.UnitProperty</class>
+
+
+		<properties>
+			<property name="hibernate.dialect"
+				value="org.hibernate.dialect.MySQLDialect" />
+			<!-- Scan for annotated classes and Hibernate mapping XML files -->
+			<property name="hibernate.archive.autodetection"
+				value="class, hbm" />
+			<!-- <property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.JBossTransactionManagerLookup" 
+				/> -->
+			<property name="hibernate.id.new_generator_mappings"
+				value="false" />
+			<property name="javax.persistence.jdbc.driver"
+				value="com.mysql.jdbc.Driver" />
+			<property name="javax.persistence.jdbc.url"
+				value="jdbc:mysql://192.168.99.100:3306/mysql" />
+			<property name="javax.persistence.jdbc.user" value="root" />
+			<property name="javax.persistence.jdbc.password"
+				value="test_passwd" />
+			<!-- <property name="show_sql" value="true"/> -->
+			<!-- <property name="format_sql" value="true"/> -->
+			<!-- <property name="use_sql_comments" value="true"/> -->
+
+		</properties>
+	</persistence-unit>
+</persistence>

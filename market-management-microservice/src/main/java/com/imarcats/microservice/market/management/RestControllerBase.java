@@ -1,6 +1,7 @@
 package com.imarcats.microservice.market.management;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.imarcats.interfaces.client.v100.dto.MatchedTradeDto;
 import com.imarcats.interfaces.client.v100.dto.types.MarketDataType;
@@ -34,18 +35,23 @@ public class RestControllerBase {
 	protected MarketManagementAdminSystem marketManagementSystem;
 
 	@Autowired
+	@Qualifier("Mock")
 	protected ProductDatastore productDatastore;
 
 	@Autowired
+	@Qualifier("Mock")
 	protected InstrumentDatastore instrumentDatastore;
 	
 	@Autowired
+	@Qualifier("Mock")
 	protected MarketOperatorDatastore marketOperatorDatastore;
 
 	@Autowired
+	@Qualifier("Mock")
 	protected MarketDatastore marketDatastore;
 	
 	@Autowired
+	@Qualifier("AssetClassDatastoreImpl")
 	protected AssetClassDatastore assetClassDatastore;
 	
 	// TODO: Warning test code, remove later 

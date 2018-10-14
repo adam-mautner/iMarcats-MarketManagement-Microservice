@@ -2,6 +2,7 @@ package com.imarcats.microservice.market.management;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
 
 import com.imarcats.internal.server.infrastructure.datastore.AssetClassDatastore;
 import com.imarcats.internal.server.infrastructure.datastore.AuditTrailEntryDatastore;
@@ -20,16 +21,23 @@ public class MarketManagementSystemFactory {
 	private MockDatastores mockDatastores = new MockDatastores();
 	
 	@Bean
-	public ProductDatastore createProductDatastore() {
+	public LocalEntityManagerFactoryBean entityManagerFactory(){
+	     LocalEntityManagerFactoryBean factoryBean = new LocalEntityManagerFactoryBean();
+
+	    factoryBean.setPersistenceUnitName("iMarcats");
+	    return factoryBean;
+	}
+	
+	@Bean(name="Mock")
+	public ProductDatastore createMockDatastore() {
 		return mockDatastores;
 	}
 	
 	@Bean
-	public MarketManagementAdminSystem createMarketManagementSystem() {
+	public MarketManagementAdminSystem createMarketManagementSystem(AssetClassDatastore assetClassDatastore) {
 		
 		MockDatastoresBase mockDataStores = mockDatastores;
 		
-		AssetClassDatastore assetClassDatastore = mockDataStores;
 		ProductDatastore productDatastore = mockDataStores;
 		InstrumentDatastore instrumentDatastore = mockDataStores;
 		MarketOperatorDatastore marketOperatorDatastore = mockDataStores;
