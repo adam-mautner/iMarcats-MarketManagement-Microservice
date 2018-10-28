@@ -59,6 +59,7 @@
         ID bigint not null auto_increment,
         NAME varchar(50) not null,
         VALUE boolean not null,
+        PROPERTY_HOLDER_ID bigint not null,
         primary key (ID)
     );
 
@@ -142,6 +143,7 @@
         ID bigint not null auto_increment,
         NAME varchar(50) not null,
         VALUE datetime not null,
+        PROPERTY_HOLDER_ID bigint not null,
         primary key (ID)
     );
 
@@ -151,6 +153,7 @@
         OUTSIDE_THE_RANGE boolean,
         END_DATE date not null,
         START_DATE date not null,
+        PROPERTY_HOLDER_ID bigint not null,
         primary key (ID)
     );
 
@@ -173,6 +176,7 @@
         NAME varchar(50) not null,
         UNIT varchar(50),
         VALUE double precision not null,
+        PROPERTY_HOLDER_ID bigint not null,
         primary key (ID)
     );
 
@@ -248,6 +252,7 @@
         NAME varchar(50) not null,
         UNIT varchar(50),
         VALUE bigint not null,
+        PROPERTY_HOLDER_ID bigint not null,
         primary key (ID)
     );
 
@@ -490,66 +495,6 @@
         primary key (ID)
     );
 
-    create table PROPERTY_HOLDER_BOOLEAN_PROPERTY (
-        PROPERTY_HOLDER_ID bigint not null,
-        _booleanProperties_ID bigint not null,
-        unique (_booleanProperties_ID)
-    );
-
-    create table PROPERTY_HOLDER_DATE_PROPERTY (
-        PROPERTY_HOLDER_ID bigint not null,
-        _dateProperties_ID bigint not null,
-        unique (_dateProperties_ID)
-    );
-
-    create table PROPERTY_HOLDER_DATE_RANGE_PROPERTY (
-        PROPERTY_HOLDER_ID bigint not null,
-        _dateRangeProperties_ID bigint not null,
-        unique (_dateRangeProperties_ID)
-    );
-
-    create table PROPERTY_HOLDER_DOUBLE_PROPERTY (
-        PROPERTY_HOLDER_ID bigint not null,
-        _doubleProperties_ID bigint not null,
-        unique (_doubleProperties_ID)
-    );
-
-    create table PROPERTY_HOLDER_INT_PROPERTY (
-        PROPERTY_HOLDER_ID bigint not null,
-        _intProperties_ID bigint not null,
-        unique (_intProperties_ID)
-    );
-
-    create table PROPERTY_HOLDER_STRING_LIST_PROPERTY (
-        PROPERTY_HOLDER_ID bigint not null,
-        _stringListProperties_ID bigint not null,
-        unique (_stringListProperties_ID)
-    );
-
-    create table PROPERTY_HOLDER_STRING_PROPERTY (
-        PROPERTY_HOLDER_ID bigint not null,
-        _stringProperties_ID bigint not null,
-        unique (_stringProperties_ID)
-    );
-
-    create table PROPERTY_HOLDER_TIME_PROPERTY (
-        PROPERTY_HOLDER_ID bigint not null,
-        _timeProperties_ID bigint not null,
-        unique (_timeProperties_ID)
-    );
-
-    create table PROPERTY_HOLDER_TIME_RANGE_PROPERTY (
-        PROPERTY_HOLDER_ID bigint not null,
-        _timeRangeProperties_ID bigint not null,
-        unique (_timeRangeProperties_ID)
-    );
-
-    create table PROPERTY_HOLDER_UNIT_PROPERTY (
-        PROPERTY_HOLDER_ID bigint not null,
-        _unitProperties_ID bigint not null,
-        unique (_unitProperties_ID)
-    );
-
     create table ROLLOVER_AUDIT (
         ID bigint not null auto_increment,
         DATE_TIME datetime not null,
@@ -599,6 +544,7 @@
     create table STRING_LIST_PROPERTY (
         ID bigint not null auto_increment,
         NAME varchar(50) not null,
+        PROPERTY_HOLDER_ID bigint not null,
         primary key (ID)
     );
 
@@ -611,6 +557,7 @@
         ID bigint not null auto_increment,
         NAME varchar(50) not null,
         VALUE varchar(150) not null,
+        PROPERTY_HOLDER_ID bigint not null,
         primary key (ID)
     );
 
@@ -628,6 +575,7 @@
         MINUTE integer not null,
         SECOND integer not null,
         TIMEZONE varchar(50) not null,
+        PROPERTY_HOLDER_ID bigint not null,
         primary key (ID)
     );
 
@@ -637,6 +585,7 @@
         OUTSIDE_THE_RANGE boolean,
         END_TIME_ID bigint,
         START_TIME_ID bigint,
+        PROPERTY_HOLDER_ID bigint not null,
         primary key (ID)
     );
 
@@ -685,12 +634,19 @@
         ID bigint not null auto_increment,
         NAME varchar(50) not null,
         UNIT varchar(50) not null,
+        PROPERTY_HOLDER_ID bigint not null,
         primary key (ID)
     );
 
     alter table ASSET_CLASS 
         add index FK153DAB29F9955AAE (PROPERTY_HOLDER_ID), 
         add constraint FK153DAB29F9955AAE 
+        foreign key (PROPERTY_HOLDER_ID) 
+        references PROPERTY_HOLDER (ID);
+
+    alter table BOOLEAN_PROPERTY 
+        add index FKACD4902CF9955AAE (PROPERTY_HOLDER_ID), 
+        add constraint FKACD4902CF9955AAE 
         foreign key (PROPERTY_HOLDER_ID) 
         references PROPERTY_HOLDER (ID);
 
@@ -717,6 +673,24 @@
         add constraint FK5E2FDE91B85E0574 
         foreign key (_haltRules_ID) 
         references HALT_RULE (ID);
+
+    alter table DATE_PROPERTY 
+        add index FKFA97DB46F9955AAE (PROPERTY_HOLDER_ID), 
+        add constraint FKFA97DB46F9955AAE 
+        foreign key (PROPERTY_HOLDER_ID) 
+        references PROPERTY_HOLDER (ID);
+
+    alter table DATE_RANGE_PROPERTY 
+        add index FK83482368F9955AAE (PROPERTY_HOLDER_ID), 
+        add constraint FK83482368F9955AAE 
+        foreign key (PROPERTY_HOLDER_ID) 
+        references PROPERTY_HOLDER (ID);
+
+    alter table DOUBLE_PROPERTY 
+        add index FKC390CA83F9955AAE (PROPERTY_HOLDER_ID), 
+        add constraint FKC390CA83F9955AAE 
+        foreign key (PROPERTY_HOLDER_ID) 
+        references PROPERTY_HOLDER (ID);
 
     alter table EXPIRATION_PROPERTIES 
         add index FK7188E4C3F9955AAE (PROPERTY_HOLDER_ID), 
@@ -765,6 +739,12 @@
         add constraint FK2D65E1CE13038DE8 
         foreign key (Instrument_INSTRUMENT_CODE) 
         references INSTRUMENT (INSTRUMENT_CODE);
+
+    alter table INT_PROPERTY 
+        add index FKB048BC45F9955AAE (PROPERTY_HOLDER_ID), 
+        add constraint FKB048BC45F9955AAE 
+        foreign key (PROPERTY_HOLDER_ID) 
+        references PROPERTY_HOLDER (ID);
 
     alter table MARKET 
         add index FK871F883C5A8AE184 (PREVIOUS_BEST_BID_ID), 
@@ -929,14 +909,14 @@
         references MARKET (MARKET_CODE);
 
     alter table MATCHED_TRADE 
-        add index FKE2C19E495E34CB5C (BUY_SIDE_ID), 
-        add constraint FKE2C19E495E34CB5C 
+        add index FKE2C19E49E7ABBB91 (BUY_SIDE_ID), 
+        add constraint FKE2C19E49E7ABBB91 
         foreign key (BUY_SIDE_ID) 
         references TRADE_SIDE (ID);
 
     alter table MATCHED_TRADE 
-        add index FKE2C19E4973A19028 (SELL_SIDE_ID), 
-        add constraint FKE2C19E4973A19028 
+        add index FKE2C19E49FD18805D (SELL_SIDE_ID), 
+        add constraint FKE2C19E49FD18805D 
         foreign key (SELL_SIDE_ID) 
         references TRADE_SIDE (ID);
 
@@ -1024,126 +1004,6 @@
         foreign key (Product_PRODUCT_CODE) 
         references PRODUCT (PRODUCT_CODE);
 
-    alter table PROPERTY_HOLDER_BOOLEAN_PROPERTY 
-        add index FK600321F5F9955AAE (PROPERTY_HOLDER_ID), 
-        add constraint FK600321F5F9955AAE 
-        foreign key (PROPERTY_HOLDER_ID) 
-        references PROPERTY_HOLDER (ID);
-
-    alter table PROPERTY_HOLDER_BOOLEAN_PROPERTY 
-        add index FK600321F5882C7E72 (_booleanProperties_ID), 
-        add constraint FK600321F5882C7E72 
-        foreign key (_booleanProperties_ID) 
-        references BOOLEAN_PROPERTY (ID);
-
-    alter table PROPERTY_HOLDER_DATE_PROPERTY 
-        add index FK38EAC61DF9955AAE (PROPERTY_HOLDER_ID), 
-        add constraint FK38EAC61DF9955AAE 
-        foreign key (PROPERTY_HOLDER_ID) 
-        references PROPERTY_HOLDER (ID);
-
-    alter table PROPERTY_HOLDER_DATE_PROPERTY 
-        add index FK38EAC61D8AE42246 (_dateProperties_ID), 
-        add constraint FK38EAC61D8AE42246 
-        foreign key (_dateProperties_ID) 
-        references DATE_PROPERTY (ID);
-
-    alter table PROPERTY_HOLDER_DATE_RANGE_PROPERTY 
-        add index FK1B9F50FF3001F132 (_dateRangeProperties_ID), 
-        add constraint FK1B9F50FF3001F132 
-        foreign key (_dateRangeProperties_ID) 
-        references DATE_RANGE_PROPERTY (ID);
-
-    alter table PROPERTY_HOLDER_DATE_RANGE_PROPERTY 
-        add index FK1B9F50FFF9955AAE (PROPERTY_HOLDER_ID), 
-        add constraint FK1B9F50FFF9955AAE 
-        foreign key (PROPERTY_HOLDER_ID) 
-        references PROPERTY_HOLDER (ID);
-
-    alter table PROPERTY_HOLDER_DOUBLE_PROPERTY 
-        add index FKB8D45B9AF9955AAE (PROPERTY_HOLDER_ID), 
-        add constraint FKB8D45B9AF9955AAE 
-        foreign key (PROPERTY_HOLDER_ID) 
-        references PROPERTY_HOLDER (ID);
-
-    alter table PROPERTY_HOLDER_DOUBLE_PROPERTY 
-        add index FKB8D45B9A3FC50DA6 (_doubleProperties_ID), 
-        add constraint FKB8D45B9A3FC50DA6 
-        foreign key (_doubleProperties_ID) 
-        references DOUBLE_PROPERTY (ID);
-
-    alter table PROPERTY_HOLDER_INT_PROPERTY 
-        add index FKCB119A8EF9955AAE (PROPERTY_HOLDER_ID), 
-        add constraint FKCB119A8EF9955AAE 
-        foreign key (PROPERTY_HOLDER_ID) 
-        references PROPERTY_HOLDER (ID);
-
-    alter table PROPERTY_HOLDER_INT_PROPERTY 
-        add index FKCB119A8ED5F6BDD2 (_intProperties_ID), 
-        add constraint FKCB119A8ED5F6BDD2 
-        foreign key (_intProperties_ID) 
-        references INT_PROPERTY (ID);
-
-    alter table PROPERTY_HOLDER_STRING_LIST_PROPERTY 
-        add index FKDE59E1F157C6E786 (_stringListProperties_ID), 
-        add constraint FKDE59E1F157C6E786 
-        foreign key (_stringListProperties_ID) 
-        references STRING_LIST_PROPERTY (ID);
-
-    alter table PROPERTY_HOLDER_STRING_LIST_PROPERTY 
-        add index FKDE59E1F1F9955AAE (PROPERTY_HOLDER_ID), 
-        add constraint FKDE59E1F1F9955AAE 
-        foreign key (PROPERTY_HOLDER_ID) 
-        references PROPERTY_HOLDER (ID);
-
-    alter table PROPERTY_HOLDER_STRING_PROPERTY 
-        add index FKE2B33F5AC4E1B5A6 (_stringProperties_ID), 
-        add constraint FKE2B33F5AC4E1B5A6 
-        foreign key (_stringProperties_ID) 
-        references STRING_PROPERTY (ID);
-
-    alter table PROPERTY_HOLDER_STRING_PROPERTY 
-        add index FKE2B33F5AF9955AAE (PROPERTY_HOLDER_ID), 
-        add constraint FKE2B33F5AF9955AAE 
-        foreign key (PROPERTY_HOLDER_ID) 
-        references PROPERTY_HOLDER (ID);
-
-    alter table PROPERTY_HOLDER_TIME_PROPERTY 
-        add index FK4C6775DEF9955AAE (PROPERTY_HOLDER_ID), 
-        add constraint FK4C6775DEF9955AAE 
-        foreign key (PROPERTY_HOLDER_ID) 
-        references PROPERTY_HOLDER (ID);
-
-    alter table PROPERTY_HOLDER_TIME_PROPERTY 
-        add index FK4C6775DEA14EDDA6 (_timeProperties_ID), 
-        add constraint FK4C6775DEA14EDDA6 
-        foreign key (_timeProperties_ID) 
-        references TIME_PROPERTY (ID);
-
-    alter table PROPERTY_HOLDER_TIME_RANGE_PROPERTY 
-        add index FKE62F6C00F9955AAE (PROPERTY_HOLDER_ID), 
-        add constraint FKE62F6C00F9955AAE 
-        foreign key (PROPERTY_HOLDER_ID) 
-        references PROPERTY_HOLDER (ID);
-
-    alter table PROPERTY_HOLDER_TIME_RANGE_PROPERTY 
-        add index FKE62F6C0049E551D2 (_timeRangeProperties_ID), 
-        add constraint FKE62F6C0049E551D2 
-        foreign key (_timeRangeProperties_ID) 
-        references TIME_RANGE_PROPERTY (ID);
-
-    alter table PROPERTY_HOLDER_UNIT_PROPERTY 
-        add index FK5E1D8D07FD691806 (_unitProperties_ID), 
-        add constraint FK5E1D8D07FD691806 
-        foreign key (_unitProperties_ID) 
-        references UNIT_PROPERTY (ID);
-
-    alter table PROPERTY_HOLDER_UNIT_PROPERTY 
-        add index FK5E1D8D07F9955AAE (PROPERTY_HOLDER_ID), 
-        add constraint FK5E1D8D07F9955AAE 
-        foreign key (PROPERTY_HOLDER_ID) 
-        references PROPERTY_HOLDER (ID);
-
     alter table SELL_BOOK_SELL_ORDER_BOOK_ENTRY 
         add index FKDFEAF6B1E878E3B3 (SELL_BOOK_ID), 
         add constraint FKDFEAF6B1E878E3B3 
@@ -1156,11 +1016,35 @@
         foreign key (_orderBookEntries_ID) 
         references SELL_ORDER_BOOK_ENTRY (ID);
 
+    alter table STRING_LIST_PROPERTY 
+        add index FK6BCB5CA8F9955AAE (PROPERTY_HOLDER_ID), 
+        add constraint FK6BCB5CA8F9955AAE 
+        foreign key (PROPERTY_HOLDER_ID) 
+        references PROPERTY_HOLDER (ID);
+
     alter table STRING_LIST_PROPERTY_VALUES 
         add index FK19A3249949578F23 (StringListProperty_ID), 
         add constraint FK19A3249949578F23 
         foreign key (StringListProperty_ID) 
         references STRING_LIST_PROPERTY (ID);
+
+    alter table STRING_PROPERTY 
+        add index FKED6FAE43F9955AAE (PROPERTY_HOLDER_ID), 
+        add constraint FKED6FAE43F9955AAE 
+        foreign key (PROPERTY_HOLDER_ID) 
+        references PROPERTY_HOLDER (ID);
+
+    alter table TIME_PROPERTY 
+        add index FKE148B07F9955AAE (PROPERTY_HOLDER_ID), 
+        add constraint FKE148B07F9955AAE 
+        foreign key (PROPERTY_HOLDER_ID) 
+        references PROPERTY_HOLDER (ID);
+
+    alter table TIME_RANGE_PROPERTY 
+        add index FK4DD83E69F9955AAE (PROPERTY_HOLDER_ID), 
+        add constraint FK4DD83E69F9955AAE 
+        foreign key (PROPERTY_HOLDER_ID) 
+        references PROPERTY_HOLDER (ID);
 
     alter table TIME_RANGE_PROPERTY 
         add index FK4DD83E6932131D76 (START_TIME_ID), 
@@ -1207,6 +1091,12 @@
     alter table TRIGGER_PROPERTIES 
         add index FK200A7E3AF9955AAE (PROPERTY_HOLDER_ID), 
         add constraint FK200A7E3AF9955AAE 
+        foreign key (PROPERTY_HOLDER_ID) 
+        references PROPERTY_HOLDER (ID);
+
+    alter table UNIT_PROPERTY 
+        add index FK1FCAA230F9955AAE (PROPERTY_HOLDER_ID), 
+        add constraint FK1FCAA230F9955AAE 
         foreign key (PROPERTY_HOLDER_ID) 
         references PROPERTY_HOLDER (ID);
 
