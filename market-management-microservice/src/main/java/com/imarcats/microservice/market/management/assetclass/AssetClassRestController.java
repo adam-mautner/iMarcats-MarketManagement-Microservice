@@ -111,9 +111,6 @@ public class AssetClassRestController extends RestControllerBase {
 		
 		PagedAssetClassListDto dto = AssetClassDtoMapping.INSTANCE.toDto(list);
 		
-		// TODO: Test only code, remove it later
-		dto.setCursorString(cursorStringInternal);
-		dto.setMaxNumberOfAssetClassesOnPage(numberOfItemsPerPageInternal);
 		return dto;
 	}
 	

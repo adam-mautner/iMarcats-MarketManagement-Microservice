@@ -3,52 +3,59 @@ package com.imarcats.microservice.market.management.assetclass;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.imarcats.internal.server.infrastructure.datastore.AssetClassDatastore;
-import com.imarcats.internal.server.infrastructure.testutils.MockDatastoresBase;
 import com.imarcats.model.AssetClass;
 import com.imarcats.model.types.PagedAssetClassList;
 
 @Component("AssetClassDatastoreImpl")
-public class AssetClassDatastoreImpl extends MockDatastoresBase implements AssetClassDatastore {
+public class AssetClassDatastoreImpl implements AssetClassDatastore {
 
 	@Autowired
 	private AssetClassCrudRepository assetClassCrudRepository;
 	
+	@Autowired
+	private AssetClassJpaRepository assetClassJpaRepository;
+	
 	public AssetClassDatastoreImpl() {
 		super();
-		// create asset class 1	
-		AssetClass assetClass = new AssetClass();
-    	String assetClassName = "ADAM_ASSET_CLASS_1";
-		assetClass.setName(assetClassName);
-    	assetClass.setDescription("Test 1");
-
-    	super.createAssetClass(assetClass);
-    	
-		// create asset class 2	
-		assetClass = new AssetClass();
-		String parent = assetClassName;
-    	assetClassName = "ADAM_ASSET_CLASS_2";
-		assetClass.setName(assetClassName);
-    	assetClass.setDescription("Test 2");
-    	assetClass.setParentName(parent);
-    	
-    	super.createAssetClass(assetClass);
 	}
 
 	@Override
 	public PagedAssetClassList findAllTopLevelAssetClassesFromCursor(String cursorString_,
 			int maxNumberOfAssetClassesOnPage_) {
-		// TODO Auto-generated method stub
-		return super.findAllTopLevelAssetClassesFromCursor(cursorString_, maxNumberOfAssetClassesOnPage_);
+		return createPagedAssetClassList(assetClassJpaRepository.findAllTopLevelAssetClassesFromCursor(createPageable(cursorString_, maxNumberOfAssetClassesOnPage_)));
 	}
 
 	@Override
 	public PagedAssetClassList findAssetClassesFromCursorByParent(String parentAssetClassName_, String cursorString_,
 			int maxNumberOfAssetClassesOnPage_) {
-		// TODO Auto-generated method stub
-		return super.findAssetClassesFromCursorByParent(parentAssetClassName_, cursorString_, maxNumberOfAssetClassesOnPage_);
+		return createPagedAssetClassList(assetClassJpaRepository.findAssetClassesFromCursorByParent(parentAssetClassName_, createPageable(cursorString_, maxNumberOfAssetClassesOnPage_)));
+	}
+	
+	@Override
+	public PagedAssetClassList findAllAssetClassesFromCursor(String cursorString_,
+			int maxNumberOfAssetClassesOnPage_) {
+		return createPagedAssetClassList(assetClassJpaRepository.findAllAssetClassesFromCursor(createPageable(cursorString_, maxNumberOfAssetClassesOnPage_)));
+	}
+
+	
+	private Pageable createPageable(String cursorString_,
+			int maxNumberOfAssetClassesOnPage_) {
+		 return PageRequest.of(cursorString_ != null ? Integer.parseInt(cursorString_) : 0, maxNumberOfAssetClassesOnPage_);
+	}
+	
+	private PagedAssetClassList createPagedAssetClassList(Page<AssetClass> page) {
+		 PagedAssetClassList pagedAssetClassList = new PagedAssetClassList();
+		 pagedAssetClassList.setAssetClasses(page.getContent().toArray(new AssetClass[page.getContent().size()]));
+		 pagedAssetClassList.setCursorString(""+page.getNumber());
+		 pagedAssetClassList.setMaxNumberOfAssetClassesOnPage(page.getNumberOfElements());
+		 
+		 return pagedAssetClassList;
 	}
 	
 	@Override
@@ -70,7 +77,5 @@ public class AssetClassDatastoreImpl extends MockDatastoresBase implements Asset
 	@Override
 	public void deleteAssetClass(String name_) {
 		assetClassCrudRepository.deleteById(name_);
-	}
-	
-	
+	}	
 }
