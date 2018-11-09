@@ -46,9 +46,6 @@ public class ProductRestController extends RestControllerBase {
 		
 		PagedProductListDto dto = ProductDtoMapping.INSTANCE.toDto(list);
 		
-		// TODO: Test only code, remove it later
-		dto.setCursorString(cursorStringInternal);
-		dto.setMaxNumberOfProductsOnPage(numberOfItemsPerPageInternal);
 		return dto;
 	}
 

@@ -143,6 +143,12 @@
 			<artifactId>market-management</artifactId>
 			<version>${imarcats.market.system.version}</version>
 		</dependency>
+		<!-- TODO: Remove this, this is not correct, this does not belong here -->
+		<dependency>
+			<groupId>com.imarcats.opensource</groupId>
+			<artifactId>market-engine</artifactId>
+			<version>${imarcats.market.system.version}</version>
+		</dependency>
 	</dependencies>
 
 </project>

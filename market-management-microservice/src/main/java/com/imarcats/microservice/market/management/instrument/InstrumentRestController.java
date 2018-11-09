@@ -77,9 +77,6 @@ public class InstrumentRestController extends RestControllerBase {
 
 		PagedInstrumentListDto dto = InstrumentDtoMapping.INSTANCE.toDto(list);
 		
-		// TODO: Test only code, remove it later
-		dto.setCursorString(cursorStringInternal);
-		dto.setMaxNumberOfInstrumentsOnPage(numberOfItemsPerPageInternal);
 		return dto;
 	}
 

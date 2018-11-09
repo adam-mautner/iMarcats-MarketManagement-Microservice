@@ -2,6 +2,8 @@ package com.imarcats.microservice.market.management;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.imarcats.interfaces.client.v100.dto.MatchedTradeDto;
 import com.imarcats.interfaces.client.v100.dto.types.MarketDataType;
@@ -35,24 +37,29 @@ public class RestControllerBase {
 	protected MarketManagementAdminSystem marketManagementSystem;
 
 	@Autowired
-	@Qualifier("Mock")
+	@Qualifier("ProductDatastoreImpl")
 	protected ProductDatastore productDatastore;
 
 	@Autowired
-	@Qualifier("Mock")
+	@Qualifier("InstrumentDatastoreImpl")
 	protected InstrumentDatastore instrumentDatastore;
 	
 	@Autowired
-	@Qualifier("Mock")
+	@Qualifier("MarketOperatorDatastoreImpl")
 	protected MarketOperatorDatastore marketOperatorDatastore;
 
 	@Autowired
-	@Qualifier("Mock")
+	@Qualifier("MarketDatastoreImpl")
 	protected MarketDatastore marketDatastore;
 	
 	@Autowired
 	@Qualifier("AssetClassDatastoreImpl")
 	protected AssetClassDatastore assetClassDatastore;
+	
+	public static Pageable createPageable(String cursorString_,
+			int numberOnPage_) {
+		 return PageRequest.of(cursorString_ != null ? Integer.parseInt(cursorString_) : 0, numberOnPage_);
+	}
 	
 	// TODO: Warning test code, remove later 
 	public static MarketManagementContextImpl createMarketManagementContext() {

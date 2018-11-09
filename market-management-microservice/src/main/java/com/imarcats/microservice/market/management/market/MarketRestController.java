@@ -71,9 +71,6 @@ public class MarketRestController extends RestControllerBase {
 
 		PagedMarketListDto dto = MarketDtoMapping.INSTANCE.toDto(list);
 		
-		// TODO: Test only code, remove it later
-		dto.setCursorString(cursorStringInternal);
-		dto.setMaxNumberOfMarketsOnPage(numberOfItemsPerPageInternal);
 		return dto;
 	}
 

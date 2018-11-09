@@ -4,7 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.imarcats.model.AssetClass;
 
-public interface AssetClassCrudRepository extends CrudRepository<AssetClass, String>
-{
+public interface AssetClassCrudRepository extends CrudRepository<AssetClass, String> {
 
 }

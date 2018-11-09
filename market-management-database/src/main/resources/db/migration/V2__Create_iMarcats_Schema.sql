@@ -67,6 +67,7 @@
         ID bigint not null auto_increment,
         DATE_STRING varchar(10) not null,
         DAY varchar(255) not null,
+        BUSINESS_CALENDAR_ID varchar(150) not null,
         primary key (ID)
     );
 
@@ -76,12 +77,6 @@
         primary key (ID)
     );
 
-    create table BUY_BOOK_BUY_ORDER_BOOK_ENTRY (
-        BUY_BOOK_ID bigint not null,
-        _orderBookEntries_ID bigint not null,
-        unique (_orderBookEntries_ID)
-    );
-
     create table BUY_ORDER_BOOK_ENTRY (
         ID bigint not null,
         LAST_UPDATE_TIMESTAMP datetime not null,
@@ -89,6 +84,7 @@
         QUOTE double precision not null,
         VALID_QUOTE boolean not null,
         ORDER_TYPE varchar(255),
+        BUY_BOOK_ID bigint not null,
         primary key (ID)
     );
 
@@ -104,12 +100,6 @@
         MAXIMUM_QUOTE_IMPROVEMENT double precision,
         ORDER_REJECT_ACTION varchar(255),
         primary key (ID)
-    );
-
-    create table CIRCUIT_BREAKER_HALT_RULE (
-        CIRCUIT_BREAKER_ID bigint not null,
-        _haltRules_ID bigint not null,
-        unique (_haltRules_ID)
     );
 
     create table CLOSING_QUOTE (
@@ -200,6 +190,7 @@
         CHANGE_TYPE varchar(255) not null,
         HALT_PERIOD integer not null,
         QUOTE_CHANGE_AMOUNT double precision not null,
+        CIRCUIT_BREAKER_ID bigint not null,
         primary key (ID)
     );
 
@@ -331,12 +322,6 @@
         END_TIME_ID bigint,
         START_TIME_ID bigint,
         primary key (MARKET_CODE)
-    );
-
-    create table MARKET_BUSINESS_CALENDAR_DAY (
-        MARKET_MARKET_CODE varchar(150) not null,
-        _businessCalendarDays_ID bigint not null,
-        unique (_businessCalendarDays_ID)
     );
 
     create table MARKET_OPERATOR (
@@ -508,12 +493,6 @@
         primary key (ID)
     );
 
-    create table SELL_BOOK_SELL_ORDER_BOOK_ENTRY (
-        SELL_BOOK_ID bigint not null,
-        _orderBookEntries_ID bigint not null,
-        unique (_orderBookEntries_ID)
-    );
-
     create table SELL_ORDER_BOOK_ENTRY (
         ID bigint not null,
         LAST_UPDATE_TIMESTAMP datetime not null,
@@ -521,6 +500,7 @@
         QUOTE double precision not null,
         VALID_QUOTE boolean not null,
         ORDER_TYPE varchar(255),
+        SELL_BOOK_ID bigint not null,
         primary key (ID)
     );
 
@@ -650,29 +630,17 @@
         foreign key (PROPERTY_HOLDER_ID) 
         references PROPERTY_HOLDER (ID);
 
-    alter table BUY_BOOK_BUY_ORDER_BOOK_ENTRY 
-        add index FKA865F4E3AD26D173 (BUY_BOOK_ID), 
-        add constraint FKA865F4E3AD26D173 
+    alter table BUSINESS_CALENDAR_DAY 
+        add index FK98EDA51AB6CE450D (BUSINESS_CALENDAR_ID), 
+        add constraint FK98EDA51AB6CE450D 
+        foreign key (BUSINESS_CALENDAR_ID) 
+        references MARKET (MARKET_CODE);
+
+    alter table BUY_ORDER_BOOK_ENTRY 
+        add index FK9B62E9E6AD26D173 (BUY_BOOK_ID), 
+        add constraint FK9B62E9E6AD26D173 
         foreign key (BUY_BOOK_ID) 
         references BUY_BOOK (ID);
-
-    alter table BUY_BOOK_BUY_ORDER_BOOK_ENTRY 
-        add index FKA865F4E3121F80CF (_orderBookEntries_ID), 
-        add constraint FKA865F4E3121F80CF 
-        foreign key (_orderBookEntries_ID) 
-        references BUY_ORDER_BOOK_ENTRY (ID);
-
-    alter table CIRCUIT_BREAKER_HALT_RULE 
-        add index FK5E2FDE91B1D23D3B (CIRCUIT_BREAKER_ID), 
-        add constraint FK5E2FDE91B1D23D3B 
-        foreign key (CIRCUIT_BREAKER_ID) 
-        references CIRCUIT_BREAKER (ID);
-
-    alter table CIRCUIT_BREAKER_HALT_RULE 
-        add index FK5E2FDE91B85E0574 (_haltRules_ID), 
-        add constraint FK5E2FDE91B85E0574 
-        foreign key (_haltRules_ID) 
-        references HALT_RULE (ID);
 
     alter table DATE_PROPERTY 
         add index FKFA97DB46F9955AAE (PROPERTY_HOLDER_ID), 
@@ -697,6 +665,12 @@
         add constraint FK7188E4C3F9955AAE 
         foreign key (PROPERTY_HOLDER_ID) 
         references PROPERTY_HOLDER (ID);
+
+    alter table HALT_RULE 
+        add index FK5C7D903AB1D23D3B (CIRCUIT_BREAKER_ID), 
+        add constraint FK5C7D903AB1D23D3B 
+        foreign key (CIRCUIT_BREAKER_ID) 
+        references CIRCUIT_BREAKER (ID);
 
     alter table INSTRUMENT 
         add index FK70174FE71FBECD25 (CHANGE_AUDIT_ID), 
@@ -866,18 +840,6 @@
         foreign key (PREVIOUS_CLOSING_QUOTE_ID) 
         references PREVIOUS_CLOSING_QUOTE (ID);
 
-    alter table MARKET_BUSINESS_CALENDAR_DAY 
-        add index FK1777595719F291DD (MARKET_MARKET_CODE), 
-        add constraint FK1777595719F291DD 
-        foreign key (MARKET_MARKET_CODE) 
-        references MARKET (MARKET_CODE);
-
-    alter table MARKET_BUSINESS_CALENDAR_DAY 
-        add index FK177759579788CF1B (_businessCalendarDays_ID), 
-        add constraint FK177759579788CF1B 
-        foreign key (_businessCalendarDays_ID) 
-        references BUSINESS_CALENDAR_DAY (ID);
-
     alter table MARKET_OPERATOR 
         add index FK674545471FBECD25 (CHANGE_AUDIT_ID), 
         add constraint FK674545471FBECD25 
@@ -1004,17 +966,11 @@
         foreign key (Product_PRODUCT_CODE) 
         references PRODUCT (PRODUCT_CODE);
 
-    alter table SELL_BOOK_SELL_ORDER_BOOK_ENTRY 
-        add index FKDFEAF6B1E878E3B3 (SELL_BOOK_ID), 
-        add constraint FKDFEAF6B1E878E3B3 
+    alter table SELL_ORDER_BOOK_ENTRY 
+        add index FK317A1A7AE878E3B3 (SELL_BOOK_ID), 
+        add constraint FK317A1A7AE878E3B3 
         foreign key (SELL_BOOK_ID) 
         references SELL_BOOK (ID);
-
-    alter table SELL_BOOK_SELL_ORDER_BOOK_ENTRY 
-        add index FKDFEAF6B11F298D43 (_orderBookEntries_ID), 
-        add constraint FKDFEAF6B11F298D43 
-        foreign key (_orderBookEntries_ID) 
-        references SELL_ORDER_BOOK_ENTRY (ID);
 
     alter table STRING_LIST_PROPERTY 
         add index FK6BCB5CA8F9955AAE (PROPERTY_HOLDER_ID), 

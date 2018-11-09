@@ -18,8 +18,6 @@ import com.imarcats.market.management.admin.MarketManagementAdminSystem;
 @Configuration
 public class MarketManagementSystemFactory {
 
-	private MockDatastores mockDatastores = new MockDatastores();
-	
 	@Bean
 	public LocalEntityManagerFactoryBean entityManagerFactory(){
 	     LocalEntityManagerFactoryBean factoryBean = new LocalEntityManagerFactoryBean();
@@ -28,20 +26,11 @@ public class MarketManagementSystemFactory {
 	    return factoryBean;
 	}
 	
-	@Bean(name="Mock")
-	public ProductDatastore createMockDatastore() {
-		return mockDatastores;
-	}
-	
 	@Bean
-	public MarketManagementAdminSystem createMarketManagementSystem(AssetClassDatastore assetClassDatastore) {
+	public MarketManagementAdminSystem createMarketManagementSystem(AssetClassDatastore assetClassDatastore, ProductDatastore productDatastore, InstrumentDatastore instrumentDatastore, MarketOperatorDatastore marketOperatorDatastore, MarketDatastore marketDatastore) {
 		
-		MockDatastoresBase mockDataStores = mockDatastores;
+		MockDatastoresBase mockDataStores = new MockDatastoresBase();
 		
-		ProductDatastore productDatastore = mockDataStores;
-		InstrumentDatastore instrumentDatastore = mockDataStores;
-		MarketOperatorDatastore marketOperatorDatastore = mockDataStores;
-		MarketDatastore marketDatastore = mockDataStores;
 		AuditTrailEntryDatastore auditTrailEntryDatastore = mockDataStores;
 		MatchedTradeDatastore matchedTradeDatastore = mockDataStores;
 		MarketTimer marketTimer = null;

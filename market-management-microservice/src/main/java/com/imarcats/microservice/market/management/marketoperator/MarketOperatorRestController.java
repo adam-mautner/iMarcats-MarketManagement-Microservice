@@ -55,9 +55,6 @@ public class MarketOperatorRestController extends RestControllerBase {
 				
 		PagedMarketOperatorListDto dto = MarketOperatorDtoMapping.INSTANCE.toDto(list);
 		
-		// TODO: Test only code, remove it later
-		dto.setCursorString(cursorStringInternal);
-		dto.setMaxNumberOfMarketOperatorsOnPage(numberOfItemsPerPageInternal);
 		return dto;
 	}
 
