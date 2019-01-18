@@ -2,6 +2,9 @@ package com.imarcats.microservice.market.management.assetclass;
 
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -9,11 +12,15 @@ import org.springframework.stereotype.Component;
 import com.imarcats.internal.server.infrastructure.datastore.AssetClassDatastore;
 import com.imarcats.microservice.market.management.RestControllerBase;
 import com.imarcats.model.AssetClass;
+import com.imarcats.model.MarketOperator;
 import com.imarcats.model.types.PagedAssetClassList;
 
 @Component("AssetClassDatastoreImpl")
 public class AssetClassDatastoreImpl implements AssetClassDatastore {
 
+    @PersistenceContext
+    private EntityManager em;
+    
 	@Autowired
 	private AssetClassCrudRepository assetClassCrudRepository;
 	
@@ -63,8 +70,23 @@ public class AssetClassDatastoreImpl implements AssetClassDatastore {
 	}
 
 	@Override
+	/**
+	 * We need this explicit update here, because market management system (for reason of convenience) 
+	 * will actually feed in a non-entity here (an copy created directly from the DTO), so updates from 
+	 * this object will not be automatically propagated the DB (dirty writing is not working here 
+	 * - reason being the object is not real entity)
+	 */
 	public AssetClass updateAssetClass(AssetClass changedAssetClassModel_) {
-		return assetClassCrudRepository.save(changedAssetClassModel_);
+		// return assetClassCrudRepository.save(changedAssetClassModel_);
+		// CRUD repo's save() will not work here correctly, because it is using check - if a new entity is passed - and 
+		// calls persists() for the entity - causing ID uniqueness violation   
+		// return marketOperatorCrudRepository.save(changedMarketOperator);
+		
+		// Object has to be freshly loaded here in order to make sure we have the latest version 
+		AssetClass assetClass = findAssetClassByName(changedAssetClassModel_.getCode());
+		// also version number has to be manually propagated 
+		changedAssetClassModel_.setVersionNumber(assetClass.getVersionNumber());
+		return em.merge(changedAssetClassModel_);
 	}
 
 	@Override

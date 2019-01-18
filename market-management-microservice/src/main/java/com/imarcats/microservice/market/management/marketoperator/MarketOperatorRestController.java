@@ -3,6 +3,7 @@ package com.imarcats.microservice.market.management.marketoperator;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,6 +59,7 @@ public class MarketOperatorRestController extends RestControllerBase {
 		return dto;
 	}
 
+	@Transactional
 	@RequestMapping(value = "/marketOperators", method = RequestMethod.POST, consumes = "application/json")
 	public void createNewMarketOperator(@RequestBody MarketOperatorDto marketOperator) {
 		// TODO: Identify user
@@ -79,6 +81,7 @@ public class MarketOperatorRestController extends RestControllerBase {
 		return ResponseEntity.notFound().build();
 	}
 
+	@Transactional
 	@RequestMapping(value = "/marketOperators/{marketOperatorCode}", method = RequestMethod.PUT, consumes = "application/json")
 	public void updateMarketOperator(@PathVariable String marketOperatorCode, @RequestBody MarketOperatorDto marketOperator) {
 		// TODO: Identify user
@@ -88,6 +91,7 @@ public class MarketOperatorRestController extends RestControllerBase {
 		marketManagementSystem.changeMarketOperator(marketOperator, user);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/marketOperators/{marketOperatorCode}", method=RequestMethod.DELETE)
     public void deleteMarketOperator(@PathVariable String marketOperatorCode) {
     	// TODO: Identify user 
@@ -103,6 +107,7 @@ public class MarketOperatorRestController extends RestControllerBase {
 		return getAllMarketOperatorsInternal(Optional.of(ActivationStatus.Approved.name()), Optional.ofNullable(null), cursorString, numberOfItemsPerPage);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/approvedMarketOperators", method = RequestMethod.POST, consumes = "application/json")
 	public void approveMarketOperator(@RequestBody ApprovalDto approvalDto) {
     	// TODO: Identify user 
@@ -110,6 +115,7 @@ public class MarketOperatorRestController extends RestControllerBase {
 		marketManagementSystem.approveMarketOperator(approvalDto.getCode(), approvalDto.getLastUpdateTimestamp(), user);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/approvedMarketOperators/{MarketOperatorCode}", method = RequestMethod.DELETE)
 	public void suspendMarketOperator(@PathVariable String marketOperatorCode) {
     	// TODO: Identify user 

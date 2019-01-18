@@ -3,6 +3,7 @@ package com.imarcats.microservice.market.management.assetclass;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,7 @@ public class AssetClassRestController extends RestControllerBase {
 		return ResponseEntity.notFound().build();
 	}
 
+	@Transactional
 	@RequestMapping(value = "/assetClasses/**/{assetClassName}/details", method = RequestMethod.DELETE)
 	public void deleteAssetClass(@PathVariable String assetClassName) {
 		// TODO: Identify user
@@ -58,6 +60,7 @@ public class AssetClassRestController extends RestControllerBase {
 		marketManagementSystem.deleteAssetClass(assetClassName, user, context);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/assetClasses/{assetClassName}/details", method = RequestMethod.PUT, consumes = { "application/JSON" })
 	public void updateTopLevelAssetClass(@PathVariable String assetClassName, @RequestBody AssetClassDto assetClass) {
 		// TODO: Identify user
@@ -66,6 +69,7 @@ public class AssetClassRestController extends RestControllerBase {
 		changeAssetClassInternal(assetClass, assetClassName, null, user);
 	}
 	
+	@Transactional
 	@RequestMapping(value = "/assetClasses/**/{parent}/{assetClassName}/details", method = RequestMethod.PUT, consumes = { "application/JSON" })
 	public void updateAssetClass(@PathVariable String parent, @PathVariable String assetClassName, @RequestBody AssetClassDto assetClass) {
 		// TODO: Identify user
@@ -74,6 +78,7 @@ public class AssetClassRestController extends RestControllerBase {
 		changeAssetClassInternal(assetClass, assetClassName, parent, user);
 	}
 	
+	@Transactional
 	@RequestMapping(value = "/assetClasses", method = RequestMethod.POST, consumes = { "application/JSON" })
 	public void createTopLevelAssetClass(@RequestBody AssetClassDto assetClass) {
 		// TODO: Identify user
@@ -82,6 +87,7 @@ public class AssetClassRestController extends RestControllerBase {
 		createAssetClassInternal(assetClass, null, user);
 	}
 	
+	@Transactional
 	@RequestMapping(value = "/assetClasses/**/{parent}", method = RequestMethod.POST, consumes = { "application/JSON" })
 	public void createAssetClass(@PathVariable String parent, @RequestBody AssetClassDto assetClass) {
 		// TODO: Identify user

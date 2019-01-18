@@ -3,6 +3,9 @@ package com.imarcats.microservice.market.management.instrument;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.imarcats.internal.server.infrastructure.datastore.InstrumentDatastore;
 import com.imarcats.microservice.market.management.RestControllerBase;
 import com.imarcats.model.Instrument;
+import com.imarcats.model.MarketOperator;
 import com.imarcats.model.types.ActivationStatus;
 import com.imarcats.model.types.PagedInstrumentList;
 import com.imarcats.model.types.UnderlyingType;
@@ -17,6 +21,9 @@ import com.imarcats.model.types.UnderlyingType;
 @Component("InstrumentDatastoreImpl")
 public class InstrumentDatastoreImpl implements InstrumentDatastore {
 
+    @PersistenceContext
+    private EntityManager em;
+    
 	@Autowired
 	private InstrumentCrudRepository instrumentCrudRepository;
 	
@@ -39,8 +46,22 @@ public class InstrumentDatastoreImpl implements InstrumentDatastore {
 	}
 
 	@Override
+	/**
+	 * We need this explicit update here, because market management system (for reason of convenience) 
+	 * will actually feed in a non-entity here (an copy created directly from the DTO), so updates from 
+	 * this object will not be automatically propagated the DB (dirty writing is not working here 
+	 * - reason being the object is not real entity)
+	 */
 	public Instrument updateInstrument(Instrument changedInstrument) {
-		return instrumentCrudRepository.save(changedInstrument);
+		// CRUD repo's save() will not work here correctly, because it is using check - if a new entity is passed - and 
+		// calls persists() for the entity - causing ID uniqueness violation   
+		// return instrumentCrudRepository.save(changedInstrument);
+		
+		// Object has to be freshly loaded here in order to make sure we have the latest version 
+		Instrument instrument = findInstrumentByCode(changedInstrument.getCode());
+		// also version number has to be manually propagated 
+		changedInstrument.setVersionNumber(instrument.getVersionNumber());
+		return em.merge(changedInstrument);
 	}
 	
 	@Override

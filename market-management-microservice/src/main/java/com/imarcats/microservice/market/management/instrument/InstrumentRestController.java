@@ -3,6 +3,7 @@ package com.imarcats.microservice.market.management.instrument;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,6 +81,7 @@ public class InstrumentRestController extends RestControllerBase {
 		return dto;
 	}
 
+	@Transactional
 	@RequestMapping(value = "/instruments", method = RequestMethod.POST, consumes = "application/json")
 	public void createNewInstrument(@RequestBody InstrumentDto instrument) {
 		// TODO: Identify user
@@ -101,6 +103,7 @@ public class InstrumentRestController extends RestControllerBase {
 		return ResponseEntity.notFound().build();
 	}
 
+	@Transactional
 	@RequestMapping(value = "/instruments/{instrumentCode}", method = RequestMethod.PUT, consumes = "application/json")
 	public void updateInstrument(@PathVariable String instrumentCode, @RequestBody InstrumentDto instrument) {
 		// TODO: Identify user
@@ -110,6 +113,7 @@ public class InstrumentRestController extends RestControllerBase {
 		marketManagementSystem.changeInstrument(instrument, user);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/instruments/{instrumentCode}", method=RequestMethod.DELETE)
     public void deleteInstrument(@PathVariable String instrumentCode) {
     	// TODO: Identify user 
@@ -124,7 +128,8 @@ public class InstrumentRestController extends RestControllerBase {
 		return getAllInstrumentsInternal(Optional.of(ActivationStatus.Approved.name()), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), cursorString,
 				numberOfItemsPerPage);
 	}
-
+	
+	@Transactional
 	@RequestMapping(value = "/approvedInstruments", method = RequestMethod.POST, consumes = "application/json")
 	public void approveInstrument(@RequestBody ApprovalDto approvalDto) {
     	// TODO: Identify user 
@@ -132,6 +137,7 @@ public class InstrumentRestController extends RestControllerBase {
 		marketManagementSystem.approveInstrument(approvalDto.getCode(), approvalDto.getLastUpdateTimestamp(), user);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/approvedInstruments/{instrumentCode}", method = RequestMethod.DELETE)
 	public void suspendInstrument(@PathVariable String instrumentCode) {
     	// TODO: Identify user 

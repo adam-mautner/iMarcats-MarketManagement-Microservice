@@ -3,6 +3,7 @@ package com.imarcats.microservice.market.management.product;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +71,7 @@ public class ProductRestController extends RestControllerBase {
 		return ResponseEntity.notFound().build();
 	}
 
+	@Transactional
 	@RequestMapping(value = "/products/{productCode}", method = RequestMethod.PUT, consumes = "application/json")
 	public void updateProduct(@PathVariable String productCode, @RequestBody ProductDto product) {
 		// TODO: Identify user
@@ -79,6 +81,7 @@ public class ProductRestController extends RestControllerBase {
 		marketManagementSystem.changeProduct(product, user);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/products/{productCode}", method=RequestMethod.DELETE)
     public void deleteProduct(@PathVariable String productCode) {
     	// TODO: Identify user 
@@ -93,6 +96,7 @@ public class ProductRestController extends RestControllerBase {
 		return getProductsByActivationStatus(Optional.of(ActivationStatus.Approved.name()), cursorString, numberOfItemsPerPage);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/approvedProducts", method = RequestMethod.POST, consumes = "application/json")
 	public void approveProduct(@RequestBody ApprovalDto approvalDto) {
     	// TODO: Identify user 
@@ -100,6 +104,7 @@ public class ProductRestController extends RestControllerBase {
 		marketManagementSystem.approveProduct(approvalDto.getCode(), approvalDto.getLastUpdateTimestamp(), user);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/approvedProducts/{productCode}", method = RequestMethod.DELETE)
 	public void suspendProduct(@PathVariable String productCode) {
     	// TODO: Identify user 

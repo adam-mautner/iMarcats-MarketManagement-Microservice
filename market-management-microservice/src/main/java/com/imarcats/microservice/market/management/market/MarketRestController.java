@@ -3,6 +3,7 @@ package com.imarcats.microservice.market.management.market;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,6 +75,7 @@ public class MarketRestController extends RestControllerBase {
 		return dto;
 	}
 
+	@Transactional
 	@RequestMapping(value = "/markets", method = RequestMethod.POST, consumes = "application/json")
 	public void createNewMarket(@RequestBody MarketDto market) {
 		// TODO: Identify user
@@ -96,6 +98,7 @@ public class MarketRestController extends RestControllerBase {
 		return ResponseEntity.notFound().build();
 	}
 
+	@Transactional
 	@RequestMapping(value = "/markets/{marketCode}", method = RequestMethod.PUT, consumes = "application/json")
 	public void updateMarket(@PathVariable String marketCode, @RequestBody MarketDto market) {
 		// TODO: Identify user
@@ -107,6 +110,7 @@ public class MarketRestController extends RestControllerBase {
 		marketManagementSystem.changeMarket(market, user, context);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/markets/{marketCode}", method=RequestMethod.DELETE)
     public void deleteMarket(@PathVariable String marketCode) {
     	// TODO: Identify user 
@@ -121,6 +125,7 @@ public class MarketRestController extends RestControllerBase {
 		return getMarketByActivationStatus(ActivationStatus.Approved, cursorString, numberOfItemsPerPage);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/approvedMarkets", method = RequestMethod.POST, consumes = "application/json")
 	public void approveMarket(@RequestBody ApprovalDto approvalDto) {
     	// TODO: Identify user 
@@ -130,6 +135,7 @@ public class MarketRestController extends RestControllerBase {
 		marketManagementSystem.approveMarket(approvalDto.getCode(), approvalDto.getLastUpdateTimestamp(), user, context);
 	}
 
+	@Transactional
 	@RequestMapping(value = "/approvedMarkets/{MarketCode}", method = RequestMethod.DELETE)
 	public void suspendMarket(@PathVariable String marketCode) {
     	// TODO: Identify user 
@@ -138,8 +144,8 @@ public class MarketRestController extends RestControllerBase {
 		MarketManagementContextImpl context = createMarketManagementContext();
 		marketManagementSystem.suspendMarket(marketCode, user, context);
 	}
-	
-	@RequestMapping(value = "/activateMarkets", method = RequestMethod.GET, produces = { "application/JSON" })
+
+	@RequestMapping(value = "/activeMarkets", method = RequestMethod.GET, produces = { "application/JSON" })
 	public PagedMarketListDto getActivateMarkets(@RequestParam("cursorString") Optional<String> cursorString,
 			@RequestParam("numberOfItemsPerPage") Optional<Integer> numberOfItemsPerPage) {
 		return getMarketByActivationStatus(ActivationStatus.Activated, cursorString, numberOfItemsPerPage);
@@ -150,7 +156,8 @@ public class MarketRestController extends RestControllerBase {
 		return getAllMarketsInternal(Optional.of(activationStatus.name()), Optional.ofNullable(null), Optional.ofNullable(null), cursorString, numberOfItemsPerPage);
 	}
 
-	@RequestMapping(value = "/activateMarkets", method = RequestMethod.POST, consumes = "application/json")
+	@Transactional
+	@RequestMapping(value = "/activeMarkets", method = RequestMethod.POST, consumes = "application/json")
 	public void activateMarket(@RequestBody ActivationDto activationDto) {
     	// TODO: Identify user 
         String user = "Adam";
@@ -163,7 +170,8 @@ public class MarketRestController extends RestControllerBase {
 		}
 	}
 
-	@RequestMapping(value = "/activateMarkets/{MarketCode}", method = RequestMethod.DELETE)
+	@Transactional
+	@RequestMapping(value = "/activeMarkets/{MarketCode}", method = RequestMethod.DELETE)
 	public void deactivateMarket(@PathVariable String marketCode) {
     	// TODO: Identify user 
         String user = "Adam";
