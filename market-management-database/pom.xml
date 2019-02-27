@@ -22,9 +22,9 @@
 				<artifactId>flyway-maven-plugin</artifactId>
 				<version>5.1.4</version>
 				<configuration>
-					<url>jdbc:mysql://192.168.99.100:3306/mysql</url>
-					<user>root</user>
-					<password>test_passwd</password>
+					<url>jdbc:mysql://${env.DATABASE_SERVICE_HOST:192.168.99.100}:${env.DATABASE_SERVICE_PORT:3306}/mysql</url>
+					<user>${env.MYSQL_USER:root}</user>
+					<password>${env.MYSQL_PASSWORD:test_passwd}</password>
 					<baselineOnMigrate>true</baselineOnMigrate>
 				</configuration>
 				<dependencies>
