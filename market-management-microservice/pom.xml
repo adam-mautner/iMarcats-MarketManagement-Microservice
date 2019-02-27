@@ -20,7 +20,7 @@
 	<properties>
 		<docker.image.prefix>com.imarcats</docker.image.prefix>
 		<java.version>1.8</java.version>
-		<imarcats.market.system.version>0.0.1-SNAPSHOT</imarcats.market.system.version>
+		<imarcats.market.system.version>1.0.1</imarcats.market.system.version>
 	</properties>
 
 	<build>
@@ -150,5 +150,18 @@
 			<version>${imarcats.market.system.version}</version>
 		</dependency>
 	</dependencies>
-
+	
+	<repositories>
+		<repository>
+			<id>dev-azure-com-imarcats-imarcats-market-system</id>
+			<url>https://pkgs.dev.azure.com/iMarcats/_packaging/iMarcats-Market-System/maven/v1</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	
 </project>
