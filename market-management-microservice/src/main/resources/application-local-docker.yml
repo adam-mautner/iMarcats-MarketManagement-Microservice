@@ -1,0 +1,10 @@
+mode : local-docker
+
+spring:
+  application:
+    name: testLatticeApp
+  datasource:
+    name: iMarcats
+    url: jdbc:mysql://192.168.99.100:3306/mysql
+    username: test_passwd 
+    password: passwd	

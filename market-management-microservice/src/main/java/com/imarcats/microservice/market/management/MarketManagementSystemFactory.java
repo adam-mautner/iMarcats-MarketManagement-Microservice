@@ -2,6 +2,8 @@ package com.imarcats.microservice.market.management;
 
 import java.util.Date;
 
+import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -29,17 +31,18 @@ import com.imarcats.model.types.TimeOfDay;
 public class MarketManagementSystemFactory {
 
 	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
 		LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 
 		factoryBean.setPersistenceUnitName("iMarcats");
+		factoryBean.setDataSource(dataSource);
 		return factoryBean;
 	}
 
 	@Bean
-	public PlatformTransactionManager transactionManager() {
+	public PlatformTransactionManager transactionManager(DataSource dataSource) {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+		transactionManager.setEntityManagerFactory(entityManagerFactory(dataSource).getObject());
 		return transactionManager;
 	}
 

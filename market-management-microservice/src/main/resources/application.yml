@@ -3,6 +3,8 @@ server:
 
 #TODO: figure out why I need this here and in bootstrap.yml
 spring:
+  profiles:
+    active: '@spring.profile@'
   application:
     name: testLatticeApp
 

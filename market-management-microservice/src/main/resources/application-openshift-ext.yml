@@ -1,0 +1,10 @@
+mode : openshift-ext
+
+spring:
+  application:
+    name: testLatticeApp
+  datasource:
+    name: iMarcats
+    url: jdbc:mysql://localhost:3306/mysql?useSSL=false
+    username: root 
+    password: passwd	
