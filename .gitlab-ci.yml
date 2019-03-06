@@ -23,7 +23,7 @@ install_tools:
         - mv openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/* ./tools  
         - wget http://mirror.olnevhost.net/pub/apache/maven/binaries/apache-maven-3.2.2-bin.tar.gz
         - tar xvf apache-maven-3.2.2-bin.tar.gz
-        - mv apache-maven-3.2.2 ./tools
+        - mv apache-maven-3.2.2/* ./tools
         - ./tools/bin/mvn -version 
     artifacts:
         paths:
