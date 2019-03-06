@@ -40,7 +40,7 @@ deploy_environment:
         - "./tool/oc get services imarcats-db 2> /dev/null || oc new-app -e MYSQL_USER=imarcats -e MYSQL_PASSWORD=imarcats -e MYSQL_DATABASE=imarcats -e MYSQL_ROOT_PASSWORD=passwd mysql --name=imarcats-db"
         - "./tool/oc expose svc/imarcats-db"
         
- install_ddl: 
+install_ddl: 
     stage: install_ddl
     before_script:
         - ./tools/oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
