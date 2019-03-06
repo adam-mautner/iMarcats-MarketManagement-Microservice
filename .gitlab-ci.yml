@@ -24,7 +24,7 @@ install_tools:
         - wget http://mirror.olnevhost.net/pub/apache/maven/binaries/apache-maven-3.2.2-bin.tar.gz
         - tar xvf apache-maven-3.2.2-bin.tar.gz
         - mv apache-maven-3.2.2 ./tools
-        - ./tools/bin/mvm -version 
+        - ./tools/bin/mvn -version 
     artifacts:
         paths:
             - tools/        
@@ -52,6 +52,6 @@ install_ddl:
     tags:
         - ci
     script:
-        - "./tool/mvm -f install market-management-database/pom.xml"
+        - "./tool/mvn -f install market-management-database/pom.xml"
         
         
