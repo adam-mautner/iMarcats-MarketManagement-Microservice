@@ -13,13 +13,12 @@ variables:
   # Configure this variable in Secure Variables:
   OPENSHIFT_TOKEN: mTCTVHH2MW7L6DkJJEXVmHjQxeAadKD5wzn1TEh18wI
 
-deploy_db: 
-    stage: deploy_environment 
+build: 
+    stage: deploy_environment
+    before_script:
+        - oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
+        - oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 2> /dev/null || oc new-project "$CI_PROJECT_NAME-$CI_PROJECT_ID"    
     tags:
         - ci
-  before_script:
-    - oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
-    - oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 2> /dev/null || oc new-project "$CI_PROJECT_NAME-$CI_PROJECT_ID"
-  script:
-    - "oc get services imarcats-db 2> /dev/null || oc new-app -e MYSQL_USER=imarcats -e MYSQL_PASSWORD=imarcats -e MYSQL_DATABASE=imarcats -e MYSQL_ROOT_PASSWORD=passwd mysql --name=imarcats-db"
-    
+    script:
+        - "oc get services imarcats-db 2> /dev/null || oc new-app -e MYSQL_USER=imarcats -e MYSQL_PASSWORD=imarcats -e MYSQL_DATABASE=imarcats -e MYSQL_ROOT_PASSWORD=passwd mysql --name=imarcats-db"
