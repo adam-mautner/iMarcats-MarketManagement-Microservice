@@ -12,7 +12,7 @@ variables:
   # Configure this variable in Secure Variables:
   OPENSHIFT_TOKEN: mTCTVHH2MW7L6DkJJEXVmHjQxeAadKD5wzn1TEh18wI
 
-install_tools
+install_tools:
     stage: install_tools
     script:
         - mkdir tools
