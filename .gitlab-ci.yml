@@ -1,5 +1,3 @@
-image: ayufan/openshift-cli
-
 stages:
     - deploy_environment
     - install_ddl
@@ -22,3 +20,4 @@ build:
         - ci
     script:
         - "oc get services imarcats-db 2> /dev/null || oc new-app -e MYSQL_USER=imarcats -e MYSQL_PASSWORD=imarcats -e MYSQL_DATABASE=imarcats -e MYSQL_ROOT_PASSWORD=passwd mysql --name=imarcats-db"
+    image: ayufan/openshift-cli
