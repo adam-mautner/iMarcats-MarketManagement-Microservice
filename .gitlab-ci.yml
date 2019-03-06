@@ -16,7 +16,7 @@ build:
     before_script:
         - wget https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
         - gunzip openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-        - mv openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/* .
+        - ls
         - oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
         - oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 2> /dev/null || oc new-project "$CI_PROJECT_NAME-$CI_PROJECT_ID"    
     tags:
