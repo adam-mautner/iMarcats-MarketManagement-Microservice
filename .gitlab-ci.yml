@@ -1,23 +1,25 @@
+image: ayufan/openshift-cli
+
 stages:
-    - build 
+    - deploy_environment
+    - install_ddl
+    - build_service
+    - deploy_service 
     - test 
 
-build: 
-    stage: build 
-    tags:
-        - ci
-    script:
-        - echo "Building"
-        - mkdir build 
-        - touch build/info.txt 
-    artifacts:
-        paths:
-            - build/
+variables:
+  OPENSHIFT_SERVER: https://172.17.188.117:8443
+  # OPENSHIFT_DOMAIN: apps.example.com
+  # Configure this variable in Secure Variables:
+  OPENSHIFT_TOKEN: mTCTVHH2MW7L6DkJJEXVmHjQxeAadKD5wzn1TEh18wI
 
-test:
-    stage: test 
+deploy_db: 
+    stage: deploy_environment 
     tags:
         - ci
-    script:
-        - echo "Testing"
-        - test -f "build/info.txt"
+  before_script:
+    - oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
+    - oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 2> /dev/null || oc new-project "$CI_PROJECT_NAME-$CI_PROJECT_ID"
+  script:
+    - "oc get services imarcats-db 2> /dev/null || oc new-app -e MYSQL_USER=imarcats -e MYSQL_PASSWORD=imarcats -e MYSQL_DATABASE=imarcats -e MYSQL_ROOT_PASSWORD=passwd mysql --name=imarcats-db"
+    
