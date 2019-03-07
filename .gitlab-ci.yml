@@ -16,8 +16,7 @@ variables:
   # Versions - TODO: Find a better Java download method
   MAVEN_VERSION: 3.2.2
   JDK_VERSION: 10
-  JDK_FILE_NAME: 62306e615de1
-  JDK_VERSION_DOWNLOAD_PATH: http://hg.openjdk.java.net/jdk10/jdk10/archive/
+  JDK_FILE_VERSION: 10.0.2+13
   DOCKER_VERSION: 18.09.3
   # Additional variables - TODO: Set these up correctly + store passwords in secure location  
   DATABASE_SERVICE_HOST: localhost
@@ -45,9 +44,9 @@ install_tools:
         - wget https://github.com/openshift/origin/releases/download/v$OPENSHIFT_TOOLS_VERSION/openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
         - tar xzf openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
         - mv openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit/* ./tools/oc  
-        - wget --no-check-certificate $JDK_VERSION_DOWNLOAD_PATH/${JDK_FILE_NAME}.tar.gz
-        - tar xzf ${JDK_FILE_NAME}.tar.gz
-        - mv jdk${JDK_VERSION}-${JDK_FILE_NAME}/* ./tools/java
+        - wget http://anduin.linuxfromscratch.org/BLFS/OpenJDK/OpenJDK-${JDK_VERSION}/OpenJDK-${JDK_FILE_VERSION}-i686-bin.tar.xz
+        - tar xzf OpenJDK-${JDK_FILE_VERSION}-i686-bin.tar.xz
+        - mv OpenJDK-${JDK_FILE_VERSION}-x86_64-bin/* ./tools/java
         - wget http://mirror.olnevhost.net/pub/apache/maven/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
         - tar xvf apache-maven-$MAVEN_VERSION-bin.tar.gz
         - mv apache-maven-$MAVEN_VERSION/* ./tools/maven
