@@ -38,10 +38,10 @@ install_tools:
         - mkdir tools/java
         - wget https://github.com/openshift/origin/releases/download/v$OPENSHIFT_TOOLS_VERSION/openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
         - tar xzf openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
-        - mv openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit/* ./tools  
+        - mv openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit/* ./tools/oc  
         - wget http://mirror.olnevhost.net/pub/apache/maven/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
         - tar xvf apache-maven-$MAVEN_VERSION-bin.tar.gz
-        - mv apache-maven-$MAVEN_VERSION/* ./tools
+        - mv apache-maven-$MAVEN_VERSION/* ./tools/maven
         - ./tools/maven/bin/mvn -version 
         - ./tools/oc/oc -version 
     artifacts:
