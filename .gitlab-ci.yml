@@ -44,7 +44,7 @@ install_tools:
         - wget https://github.com/openshift/origin/releases/download/v$OPENSHIFT_TOOLS_VERSION/openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
         - tar xzf openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
         - mv openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit/* ./tools/oc  
-        - wget https://download.java.net/$JDK_VERSION_DOWNLOAD_PATH/openjdk-$JDK_VERSION_linux-x64_bin.tar.gz
+        - wget --no-check-certificate -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/10.0.1+10/fb4372174a714e6b8c52526dc134031e/jdk-10.0.1_linux-x64_bin.tar.gz
         - tar xzf openjdk-$JDK_VERSION_linux-x64_bin.tar.gz
         - mv jdk-$JDK_VERSION/* ./tools/java
         - wget http://mirror.olnevhost.net/pub/apache/maven/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
