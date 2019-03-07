@@ -14,7 +14,9 @@ variables:
   OPENSHIFT_TOOLS_VERSION: 3.11.0
   OPENSHIFT_TOOLS_FILE_POSTFIX: 0cbc58b
   # Versions
-  MAVEN_VERSION: 3.2.2 
+  MAVEN_VERSION: 3.2.2
+  JDK_VERSION: 10.0.2 
+  JDK_VERSION_DOWNLOAD_PATH: java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13
   # Additional variables - TODO: Set these up correctly + store passwords in secure location  
   DATABASE_SERVICE_HOST: localhost
   MYSQL_PASSWORD: passwd
@@ -39,9 +41,13 @@ install_tools:
         - wget https://github.com/openshift/origin/releases/download/v$OPENSHIFT_TOOLS_VERSION/openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
         - tar xzf openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
         - mv openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit/* ./tools/oc  
+        - wget https://download.java.net/$JDK_VERSION_DOWNLOAD_PATH/openjdk-$JDK_VERSION_linux-x64_bin.tar.gz
+        - tar xzf openjdk-$JDK_VERSION_linux-x64_bin.tar.gz
+        - mv jdk-$JDK_VERSION/* ./tools/java
         - wget http://mirror.olnevhost.net/pub/apache/maven/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
         - tar xvf apache-maven-$MAVEN_VERSION-bin.tar.gz
         - mv apache-maven-$MAVEN_VERSION/* ./tools/maven
+        - ./tool/java/bin/java -version 
         - ./tools/maven/bin/mvn -version 
         - ./tools/oc/oc -version 
     artifacts:
