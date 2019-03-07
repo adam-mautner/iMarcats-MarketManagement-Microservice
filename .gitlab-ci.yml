@@ -16,7 +16,8 @@ variables:
   # Versions
   MAVEN_VERSION: 3.2.2
   JDK_VERSION: 10.0.2 
-  JDK_VERSION_DOWNLOAD_PATH: java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13
+  JDK_VERSION_DOWNLOAD_PATH: java/GA/jdk9/9/binaries
+  DOCKER_VERSION: 18.09.3
   # Additional variables - TODO: Set these up correctly + store passwords in secure location  
   DATABASE_SERVICE_HOST: localhost
   MYSQL_PASSWORD: passwd
@@ -28,6 +29,7 @@ variables:
   DOCKER_CERT_PATH: ./certs
   OPENSHIFT_SERVER: https://$OPENSHIFT_SERVER_IP:8443
   OPENSHIFT_DOCKER_REGISTRY : docker-registry-default.$DOCKER_HOST_IP.nip.io
+  JAVA_HOME: ./tools/java
   
 install_tools:
     stage: install_tools
@@ -38,6 +40,7 @@ install_tools:
         - mkdir tools/maven
         - mkdir tools/oc
         - mkdir tools/java
+        - mkdir tools/docker
         - wget https://github.com/openshift/origin/releases/download/v$OPENSHIFT_TOOLS_VERSION/openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
         - tar xzf openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
         - mv openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit/* ./tools/oc  
@@ -47,9 +50,13 @@ install_tools:
         - wget http://mirror.olnevhost.net/pub/apache/maven/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
         - tar xvf apache-maven-$MAVEN_VERSION-bin.tar.gz
         - mv apache-maven-$MAVEN_VERSION/* ./tools/maven
+        - wget https://download.docker.com/linux/static/stable/x86_64/docker-$DOCKER_VERSION.tgz  
+        - tar xzvf docker-$DOCKER_VERSION.tgz
+        - mv docker/* ./tools/docker 
         - ./tool/java/bin/java -version 
         - ./tools/maven/bin/mvn -version 
         - ./tools/oc/oc -version 
+        - ./tools/docker/docker version
     artifacts:
         paths:
             - tools/        
