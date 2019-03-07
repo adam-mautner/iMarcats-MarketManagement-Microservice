@@ -3,8 +3,7 @@ stages:
     - deploy_environment
     - install_ddl
     - build_service
-    - deploy_service 
-    - test 
+    - deploy_service
 
 variables:
   # OpenShift settings     
@@ -70,14 +69,15 @@ deploy_environment:
         - ci
     script:
         - "./tool/oc/oc get services imarcats-db 2> /dev/null || oc new-app -e MYSQL_USER=imarcats -e MYSQL_PASSWORD=imarcats -e MYSQL_DATABASE=imarcats -e MYSQL_ROOT_PASSWORD=passwd mysql --name=imarcats-db"
-        - "./tool/oc expose svc/imarcats-db"
+        - test `./tools/oc/oc get routes |  grep "imarcats-db" | wc -l` -eq 1 || ./tool/oc/oc expose svc/imarcats-db
         
 install_ddl: 
     stage: install_ddl
     before_script:
         - ./tools/oc/oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
         - ./tools/oc/oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 
-        - ./tools/oc/oc port-forward imarcats-db-1-jdmwm 3306:3306 &
+        - export DB_POD_NAME=`oc get pods | sed -n '2p' | cut -c1-22`
+        - ./tools/oc/oc port-forward $DB_POD_NAME 3306:3306 &
     tags:
         - ci
     script:
@@ -95,5 +95,16 @@ build_service:
     script:
         - "./tool/oc/mvn -f install market-management-microservice/pom.xml"
         - "./tools/docker/docker tag com.imarcats/market-management-microservice $OPENSHIFT_DOCKER_REGISTRY/imarcats-project/market-management-microservice"
-        - "./tools/docker/docker push $OPENSHIFT_DOCKER_REGISTRY/imarcats-project/market-management-microservice"
         
+deploy_service: 
+    stage: deploy_service
+    before_script:
+        - ./tools/oc/oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
+        - ./tools/oc/oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 
+        - ./tools/docker/docker login -u developer -p "$OPENSHIFT_TOKEN" "$OPENSHIFT_DOCKER_REGISTRY"
+    tags:
+        - ci
+    script:
+        - "./tools/docker/docker push $OPENSHIFT_DOCKER_REGISTRY/imarcats-project/market-management-microservice"
+        - test `./tools/oc/oc get pods |  grep "market-management-microservice" | wc -l` -eq 1 || ./tools/oc/oc new-app -e ACTIVE_PROFILE=openshift market-management-microservice --name=market-management-microservice
+        - test `./tools/oc/oc get routes |  grep "market-management-microservice" | wc -l` -eq 1 || ./tools/oc/oc expose svc/market-management-microservice
