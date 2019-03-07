@@ -55,7 +55,7 @@ install_tools:
         - mv docker/* ./tools/docker 
         #- ./tool/java/bin/java -version 
         #- ./tools/maven/bin/mvn -version 
-        - ./tools/oc/oc -version 
+        - ./tools/oc/oc version 
         - ./tools/docker/docker version
     artifacts:
         paths:
@@ -65,7 +65,7 @@ deploy_environment:
     stage: deploy_environment
     before_script:
         - ./tools/oc/oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
-        - ./tools/oc/oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 2> /dev/null || oc new-project "$CI_PROJECT_NAME-$CI_PROJECT_ID"    
+        - ./tools/oc/oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 2> /dev/null || ./tools/oc/oc new-project "$CI_PROJECT_NAME-$CI_PROJECT_ID"    
     tags:
         - ci
     script:
@@ -82,5 +82,18 @@ install_ddl:
         - ci
     script:
         - "./tool/oc/mvn -f install market-management-database/pom.xml"
-        
+
+build_service: 
+    stage: build_service
+    before_script:
+        - ./tools/oc/oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
+        - ./tools/oc/oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 
+        - ./tools/docker/docker login -u developer -p "$OPENSHIFT_TOKEN" "$OPENSHIFT_DOCKER_REGISTRY"
+        - test `./tools/oc/oc get is -n "$CI_PROJECT_NAME-$CI_PROJECT_ID" |  grep "$CI_PROJECT_NAME-$CI_PROJECT_ID" | wc -l` -eq 1 || ./tools/oc/oc create is market-management-microservice -n "$CI_PROJECT_NAME-$CI_PROJECT_ID" 
+    tags:
+        - ci
+    script:
+        - "./tool/oc/mvn -f install market-management-microservice/pom.xml"
+        - "./tools/docker/docker tag com.imarcats/market-management-microservice $OPENSHIFT_DOCKER_REGISTRY/imarcats-project/market-management-microservice"
+        - "./tools/docker/docker push $OPENSHIFT_DOCKER_REGISTRY/imarcats-project/market-management-microservice"
         
