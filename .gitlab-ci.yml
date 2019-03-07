@@ -45,16 +45,16 @@ install_tools:
         - tar xzf openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
         - mv openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit/* ./tools/oc  
         - wget http://anduin.linuxfromscratch.org/BLFS/OpenJDK/OpenJDK-${JDK_VERSION}/OpenJDK-${JDK_FILE_VERSION}-i686-bin.tar.xz
-        - tar xzf OpenJDK-${JDK_FILE_VERSION}-i686-bin.tar.xz
-        - mv OpenJDK-${JDK_FILE_VERSION}-x86_64-bin/* ./tools/java
+        #- tar -xvf OpenJDK-${JDK_FILE_VERSION}-i686-bin.tar.xz
+        #- mv OpenJDK-${JDK_FILE_VERSION}-x86_64-bin/* ./tools/java
         - wget http://mirror.olnevhost.net/pub/apache/maven/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
         - tar xvf apache-maven-$MAVEN_VERSION-bin.tar.gz
         - mv apache-maven-$MAVEN_VERSION/* ./tools/maven
         - wget https://download.docker.com/linux/static/stable/x86_64/docker-$DOCKER_VERSION.tgz  
         - tar xzvf docker-$DOCKER_VERSION.tgz
         - mv docker/* ./tools/docker 
-        - ./tool/java/bin/java -version 
-        - ./tools/maven/bin/mvn -version 
+        #- ./tool/java/bin/java -version 
+        #- ./tools/maven/bin/mvn -version 
         - ./tools/oc/oc -version 
         - ./tools/docker/docker version
     artifacts:
