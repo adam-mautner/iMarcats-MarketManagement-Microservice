@@ -46,7 +46,7 @@ install_tools:
         - mv openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit/* ./tools/oc  
         - wget --no-check-certificate $JDK_VERSION_DOWNLOAD_PATH/${JDK_FILE_NAME}.tar.gz
         - tar xzf ${JDK_FILE_NAME}.tar.gz
-        - mv jdk-$JDK_VERSION/* ./tools/java
+        - mv jdk-${JDK_FILE_NAME}/* ./tools/java
         - wget http://mirror.olnevhost.net/pub/apache/maven/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
         - tar xvf apache-maven-$MAVEN_VERSION-bin.tar.gz
         - mv apache-maven-$MAVEN_VERSION/* ./tools/maven
