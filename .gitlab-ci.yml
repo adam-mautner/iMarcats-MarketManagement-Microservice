@@ -15,7 +15,7 @@ variables:
   OPENSHIFT_TOOLS_FILE_POSTFIX: 0cbc58b
   # Versions - TODO: Find a better Java download method
   MAVEN_VERSION: 3.2.2
-  JDK_VERSION: 10
+  JDK_VERSION: 10.0.2
   JDK_FILE_VERSION: 10.0.2+13
   DOCKER_VERSION: 18.09.3
   # Additional variables - TODO: Set these up correctly + store passwords in secure location  
