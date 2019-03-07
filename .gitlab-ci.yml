@@ -7,24 +7,43 @@ stages:
     - test 
 
 variables:
-  OPENSHIFT_SERVER: https://172.17.188.117:8443
-  # OPENSHIFT_DOMAIN: apps.example.com
-  # Configure this variable in Secure Variables:
+  # OpenShift settings     
+  OPENSHIFT_SERVER_IP: 172.17.188.117
   OPENSHIFT_TOKEN: mTCTVHH2MW7L6DkJJEXVmHjQxeAadKD5wzn1TEh18wI
-
+  # File path example: .../v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+  OPENSHIFT_TOOLS_VERSION: 3.11.0
+  OPENSHIFT_TOOLS_FILE_POSTFIX: 0cbc58b
+  # Versions
+  MAVEN_VERSION: 3.2.2 
+  # Additional variables - TODO: Set these up correctly + store passwords in secure location  
+  DATABASE_SERVICE_HOST: localhost
+  MYSQL_PASSWORD: passwd
+  MYSQL_USER: root
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_HOST_IP: 172.17.147.227
+  DOCKER_HOST: tcp://$DOCKER_HOST_IP:2376
+  # TODO: Add certifficates to secure location 
+  DOCKER_CERT_PATH: ./certs
+  OPENSHIFT_SERVER: https://$OPENSHIFT_SERVER_IP:8443
+  OPENSHIFT_DOCKER_REGISTRY : docker-registry-default.$DOCKER_HOST_IP.nip.io
+  
 install_tools:
     stage: install_tools
     tags:
         - ci
     script:
         - mkdir tools
-        - wget https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-        - tar xzf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
-        - mv openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/* ./tools  
-        - wget http://mirror.olnevhost.net/pub/apache/maven/binaries/apache-maven-3.2.2-bin.tar.gz
-        - tar xvf apache-maven-3.2.2-bin.tar.gz
-        - mv apache-maven-3.2.2/* ./tools
-        - ./tools/bin/mvn -version 
+        - mkdir tools/maven
+        - mkdir tools/oc
+        - mkdir tools/java
+        - wget https://github.com/openshift/origin/releases/download/v$OPENSHIFT_TOOLS_VERSION/openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
+        - tar xzf openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit.tar.gz
+        - mv openshift-origin-client-tools-v$OPENSHIFT_TOOLS_VERSION-$OPENSHIFT_TOOLS_FILE_POSTFIX-linux-64bit/* ./tools  
+        - wget http://mirror.olnevhost.net/pub/apache/maven/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
+        - tar xvf apache-maven-$MAVEN_VERSION-bin.tar.gz
+        - mv apache-maven-$MAVEN_VERSION/* ./tools
+        - ./tools/maven/bin/mvn -version 
+        - ./tools/oc/oc -version 
     artifacts:
         paths:
             - tools/        
@@ -32,26 +51,23 @@ install_tools:
 deploy_environment: 
     stage: deploy_environment
     before_script:
-        - ./tools/oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
-        - ./tools/oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 2> /dev/null || oc new-project "$CI_PROJECT_NAME-$CI_PROJECT_ID"    
+        - ./tools/oc/oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
+        - ./tools/oc/oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 2> /dev/null || oc new-project "$CI_PROJECT_NAME-$CI_PROJECT_ID"    
     tags:
         - ci
     script:
-        - "./tool/oc get services imarcats-db 2> /dev/null || oc new-app -e MYSQL_USER=imarcats -e MYSQL_PASSWORD=imarcats -e MYSQL_DATABASE=imarcats -e MYSQL_ROOT_PASSWORD=passwd mysql --name=imarcats-db"
+        - "./tool/oc/oc get services imarcats-db 2> /dev/null || oc new-app -e MYSQL_USER=imarcats -e MYSQL_PASSWORD=imarcats -e MYSQL_DATABASE=imarcats -e MYSQL_ROOT_PASSWORD=passwd mysql --name=imarcats-db"
         - "./tool/oc expose svc/imarcats-db"
         
 install_ddl: 
     stage: install_ddl
     before_script:
-        - ./tools/oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
-        - ./tools/oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 
-        - export DATABASE_SERVICE_HOST=localhost
-        - export MYSQL_PASSWORD=passwd
-        - export MYSQL_USER=root
-        - ./tools/oc port-forward imarcats-db-1-jdmwm 3306:3306 &
+        - ./tools/oc/oc login "$OPENSHIFT_SERVER" --token="$OPENSHIFT_TOKEN" --insecure-skip-tls-verify
+        - ./tools/oc/oc project "$CI_PROJECT_NAME-$CI_PROJECT_ID" 
+        - ./tools/oc/oc port-forward imarcats-db-1-jdmwm 3306:3306 &
     tags:
         - ci
     script:
-        - "./tool/mvn -f install market-management-database/pom.xml"
+        - "./tool/oc/mvn -f install market-management-database/pom.xml"
         
         
